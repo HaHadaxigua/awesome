@@ -1,7 +1,9 @@
 package main
 
 import (
+	"awesome/yaegi/linux_complex/types"
 	_ "embed"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
 	"github.com/traefik/yaegi/interp"
@@ -10,6 +12,7 @@ import (
 )
 
 //go:generate yaegi extract github.com/spf13/cast
+//go:generate yaegi extract awesome/yaegi/linux_complex/types
 
 //go:embed script/fib.go
 var fibScript string
@@ -78,6 +81,12 @@ func init() {
 		"ToUint8E":                      reflect.ValueOf(cast.ToUint8E),
 		"ToUintE":                       reflect.ValueOf(cast.ToUintE),
 	}
+	Symbols["awesome/yaegi/linux_complex/types/types"] = map[string]reflect.Value{
+		// type definitions
+		"Os": reflect.ValueOf((*types.Os)(nil)),
+		// function, constant and variable definitions
+		"AwsOs": reflect.ValueOf(&types.AwsOs).Elem(),
+	}
 }
 
 func main() {
@@ -103,7 +112,19 @@ func main() {
 	v, err := i.Eval("script.Main")
 	if err != nil {
 		logrus.Error("failed to load main function")
+		panic(err)
 	}
 	fn := v.Interface().(func())
 	fn()
+
+	getR, err := i.Eval("script.GiveInvoker")
+	if err != nil {
+		logrus.Error("failed to load func GiveInvoker")
+	}
+	getRFn := getR.Interface().(func() *struct {
+		Code    int
+		Message string
+	})
+	rFn := getRFn()
+	fmt.Println(rFn)
 }
