@@ -20,3 +20,8 @@ LDFLAGS = -extldflags \
 test_compile:
 	cd ./tencent
 	GOOS=linux GOARCH=amd64 go build -o tencent/tencent ./tencent/main.go
+
+test_yeagi:
+	cd yaegi/cmd;
+	go generate;
+	GOOS=linux GOARCH=amd64 go build -o yaegi/bin/yeagi main.go
