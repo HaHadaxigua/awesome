@@ -1,5 +1,6 @@
 .PHONY: all build compile clean
 
+
 BUILDTIME ?= $(shell date +%Y-%m-%d_%I:%M:%S)
 GITCOMMIT ?= $(shell git rev-parse -q HEAD)
 ifeq ($(CI_PIPELINE_ID),)
@@ -18,14 +19,4 @@ LDFLAGS = -extldflags \
 
 
 test_compile:
-	cd ./tencent
-	GOOS=linux GOARCH=amd64 go build -o tencent/tencent ./tencent/main.go
-
-test_yeagi:
-	cd yaegi/cmd;
-	go generate;
-	GOOS=linux GOARCH=amd64 go build -o yaegi/bin/yeagi main.go
-
-test_yeagi_try:
-	cd yaegi/linux_try;\
-    GOOS=linux GOARCH=amd64 go build -o yaegi/bin/yeagi_linux main.go
+	    GOOS=linux GOARCH=amd64 go build -o bin/yaegi main.go
