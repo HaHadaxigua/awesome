@@ -29,3 +29,7 @@ test_yeagi:
 test_yeagi_try:
 	cd yaegi/linux_try;\
     GOOS=linux GOARCH=amd64 go build -o yaegi/bin/yeagi_linux main.go
+
+test_wasm:
+	cd wasm;
+	cargo build demo.rs
